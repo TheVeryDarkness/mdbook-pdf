@@ -235,7 +235,6 @@ jobs:
           if [ `grep -c "output.pdf" book.toml` -eq '0' ]; then
             echo "[output.pdf]" >> book.toml
             echo "display-header-footer = true" >> book.toml
-            echo "theme = \"default_theme\"" >> book.toml
             echo "print-background = true" >> book.toml
             echo "paper-width = 8" >> book.toml
             echo "paper-height = 10" >> book.toml
@@ -371,7 +370,6 @@ jobs:
           cd ${{ matrix.dir }}
           echo "[output.pdf]" >> book.toml
           echo "display-header-footer = true" >> book.toml
-          echo "theme = \"default_theme\"" >> book.toml
           echo "print-background = true" >> book.toml
           echo "paper-width = 8" >> book.toml
           echo "paper-height = 10" >> book.toml
