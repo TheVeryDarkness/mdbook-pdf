@@ -237,7 +237,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             {
                 Ok(elem) => {
                     // Anaglous to elem.click() but does not scroll the element into view first.
-                    elem.parent.click_point(elem.get_midpoint()?)?;
+                    elem.parent.click_point(elem.get_js_midpoint()?)?;
                 }
                 Err(_) => {
                     if cfg!(debug_assertions) {
