@@ -229,20 +229,21 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
         // Find the theme and click it to change the theme.
         if !cloned_cfg.theme.is_empty() {
-            match tab.find_element(&format!("button.theme#{}", cloned_cfg.theme.to_lowercase())) {
+            let theme_name = cloned_cfg.theme.to_lowercase();
+            let button_selector = format!("button.theme#mdbook-theme-{theme_name}");
+            match tab.find_element(&button_selector) {
                 Ok(_) => {
-                    tab.evaluate(
-                        &format!(
-                            "document.querySelector('button.theme#{}').click()",
-                            cloned_cfg.theme.to_lowercase()
-                        ),
-                        false,
-                    )?;
+                    let click_button =
+                        format!("document.querySelector('{button_selector}').click()",);
+                    tab.evaluate(&click_button, false)?;
                 }
-                Err(_) => println!(
-                    "Unable to find theme {}, return to default one.",
-                    cloned_cfg.theme.to_lowercase()
-                ),
+                Err(_) => {
+                    if cfg!(debug_assertions) {
+                        panic!("Unable to find theme {theme_name}.")
+                    } else {
+                        println!("Unable to find theme {theme_name}, return to default one.")
+                    }
+                }
             };
         }
 
