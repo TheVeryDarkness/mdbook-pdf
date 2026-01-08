@@ -230,12 +230,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         // Find the theme and click it to change the theme.
         if !cloned_cfg.theme.is_empty() {
             let theme_name = cloned_cfg.theme.to_lowercase();
-            let button_selector = format!("button.theme#mdbook-theme-{theme_name}");
-            match tab.find_element(&button_selector) {
-                Ok(_) => {
-                    let click_button =
-                        format!("document.querySelector('{button_selector}').click()",);
-                    tab.evaluate(&click_button, false)?;
+
+            match tab
+                .find_element(&format!("button.theme#mdbook-theme-{theme_name}"))
+                .or_else(|_| tab.find_element(&format!("button.theme#{theme_name}")))
+            {
+                Ok(elem) => {
+                    // Anaglous to elem.click() but does not scroll the element into view first.
+                    elem.parent.click_point(elem.get_midpoint()?)?;
                 }
                 Err(_) => {
                     if cfg!(debug_assertions) {
@@ -244,7 +246,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                         println!("Unable to find theme {theme_name}, return to default one.")
                     }
                 }
-            };
+            }
         }
 
         // Generate the PDF.
