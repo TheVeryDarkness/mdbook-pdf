@@ -236,8 +236,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 .or_else(|_| tab.find_element(&format!("button.theme#{theme_name}")))
             {
                 Ok(elem) => {
-                    // Anaglous to elem.click() but does not scroll the element into view first.
-                    elem.parent.click_point(elem.get_js_midpoint()?)?;
+                    let click_button = format!(
+                        "document.querySelector('button.theme#{}').click()",
+                        elem.remote_object_id,
+                    );
+                    tab.evaluate(&click_button, false)?;
                 }
                 Err(_) => {
                     if cfg!(debug_assertions) {
